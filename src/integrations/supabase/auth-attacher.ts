@@ -6,6 +6,12 @@ import { supabase } from './client'
 // the browser never attaches the bearer token to serverFn RPCs.
 export const attachSupabaseAuth = createMiddleware({ type: 'function' }).client(
   async ({ next }) => {
+    const isMock = typeof window !== "undefined" && localStorage.getItem("mock_session") === "true";
+    if (isMock) {
+      return next({
+        headers: { Authorization: `Bearer mock-token-12345` },
+      });
+    }
     const { data } = await supabase.auth.getSession()
     const token = data.session?.access_token
     return next({

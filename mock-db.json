@@ -1,0 +1,50 @@
+{
+  "urls": [
+    {
+      "id": "69653007-4576-4a91-a431-56981b6c2df8",
+      "click_count": 0,
+      "last_visited_at": null,
+      "created_at": "2026-06-12T18:41:08.866Z",
+      "user_id": "00000000-0000-0000-0000-000000000000",
+      "original_url": "https://example.com/test-smoke-mode",
+      "short_code": "sDirqd2",
+      "custom_alias": null,
+      "expiry_date": null
+    },
+    {
+      "id": "256d2f5e-12e6-4761-8928-32657c12ed68",
+      "click_count": 1,
+      "last_visited_at": "2026-06-12T18:45:41.671Z",
+      "created_at": "2026-06-12T18:45:10.093Z",
+      "user_id": "00000000-0000-0000-0000-000000000000",
+      "original_url": "https://www.nykaa.com/",
+      "short_code": "aparna",
+      "custom_alias": "aparna",
+      "expiry_date": null
+    },
+    {
+      "id": "9535fdc5-2440-4727-b7a8-79833f3f9064",
+      "click_count": 0,
+      "last_visited_at": null,
+      "created_at": "2026-06-12T19:02:43.431Z",
+      "user_id": "00000000-0000-0000-0000-000000000000",
+      "original_url": "https://example.com/testing-modal-edit",
+      "short_code": "testing-modal",
+      "custom_alias": "testing-modal",
+      "expiry_date": null
+    }
+  ],
+  "visits": [
+    {
+      "id": "7c16e601-fda4-492d-b883-1287129372c3",
+      "timestamp": "2026-06-12T18:45:41.671Z",
+      "url_id": "256d2f5e-12e6-4761-8928-32657c12ed68",
+      "ip_address": null,
+      "browser": "Chrome",
+      "device": "Desktop",
+      "os": "Windows",
+      "country": null,
+      "city": null
+    }
+  ]
+}

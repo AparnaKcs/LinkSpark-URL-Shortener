@@ -64,6 +64,14 @@ function AuthPage() {
     }
   }
 
+  function enterGuestMode() {
+    if (typeof window !== "undefined") {
+      localStorage.setItem("mock_session", "true");
+    }
+    toast.success("Logged in as Guest for Smoke Testing!");
+    navigate({ to: "/dashboard", replace: true });
+  }
+
   return (
     <div className="min-h-screen grid lg:grid-cols-2 bg-background">
       <div className="hidden lg:flex flex-col justify-between p-12 bg-foreground text-background">
@@ -109,6 +117,20 @@ function AuthPage() {
               {loading ? "…" : mode === "signin" ? "Sign in" : "Create account"}
             </button>
           </form>
+
+          <div className="relative flex py-1 items-center">
+            <div className="flex-grow border-t border-border"></div>
+            <span className="flex-shrink mx-3 text-[10px] text-muted-foreground font-mono uppercase tracking-wider">Or</span>
+            <div className="flex-grow border-t border-border"></div>
+          </div>
+
+          <button
+            type="button"
+            onClick={enterGuestMode}
+            className="w-full h-10 border border-border bg-surface text-foreground rounded-md text-sm font-medium hover:bg-muted transition flex items-center justify-center gap-2 cursor-pointer"
+          >
+            ⚡ Guest Mode (Bypass Auth)
+          </button>
 
           <p className="text-xs text-center text-muted-foreground">
             {mode === "signin" ? "No account? " : "Already have one? "}

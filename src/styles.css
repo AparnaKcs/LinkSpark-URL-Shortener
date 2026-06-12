@@ -52,10 +52,10 @@
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.18 0.01 270);
 
-  /* Brand: emerald 500 #10b981 */
-  --brand: oklch(0.72 0.17 162);
+  /* Brand: Blue #2563eb */
+  --brand: oklch(0.55 0.18 250);
   --brand-foreground: oklch(0.985 0.002 270);
-  --primary: oklch(0.72 0.17 162);
+  --primary: oklch(0.55 0.18 250);
   --primary-foreground: oklch(0.985 0.002 270);
 
   --secondary: oklch(0.965 0.003 270);
@@ -69,7 +69,7 @@
 
   --border: oklch(0.18 0.01 270 / 8%);
   --input: oklch(0.18 0.01 270 / 12%);
-  --ring: oklch(0.72 0.17 162);
+  --ring: oklch(0.55 0.18 250);
 }
 
 .dark {
@@ -81,7 +81,7 @@
   --card-foreground: oklch(0.97 0.002 270);
   --popover: oklch(0.17 0.01 270);
   --popover-foreground: oklch(0.97 0.002 270);
-  --primary: oklch(0.72 0.17 162);
+  --primary: oklch(0.6 0.18 250);
   --primary-foreground: oklch(0.14 0.01 270);
   --secondary: oklch(0.22 0.01 270);
   --secondary-foreground: oklch(0.97 0 0);
@@ -93,7 +93,7 @@
   --destructive-foreground: oklch(0.97 0 0);
   --border: oklch(1 0 0 / 8%);
   --input: oklch(1 0 0 / 12%);
-  --ring: oklch(0.72 0.17 162);
+  --ring: oklch(0.6 0.18 250);
 }
 
 @layer base {

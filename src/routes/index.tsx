@@ -1,9 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { Link2 } from "lucide-react";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Vektor — URL Shortener with Analytics" },
+      { title: "Snip — URL Shortener with Analytics" },
       { name: "description", content: "Production-grade link infrastructure. Shorten URLs, generate QR codes, and track every click in real time." },
     ],
   }),
@@ -15,11 +16,9 @@ function Landing() {
     <div className="min-h-screen bg-background text-foreground">
       <nav className="border-b border-border bg-background/80 backdrop-blur-sm sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-6 h-14 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="size-6 bg-brand rounded-sm flex items-center justify-center">
-              <div className="size-2 bg-background rotate-45" />
-            </div>
-            <span className="font-semibold tracking-tight">VEKTOR</span>
+          <div className="flex items-center gap-1.5 text-brand">
+            <Link2 className="size-5" />
+            <span className="font-semibold tracking-tight text-foreground">Snip</span>
           </div>
           <div className="flex items-center gap-2">
             <Link to="/auth" className="text-sm font-medium px-3 py-1.5 hover:bg-muted rounded-md transition-colors">Sign in</Link>
@@ -73,9 +72,9 @@ function Landing() {
 
       <footer className="border-t border-border py-10 mt-10">
         <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-          <div className="flex items-center gap-2 opacity-60">
-            <div className="size-4 bg-foreground rounded-sm" />
-            <span className="text-xs font-semibold tracking-tight">VEKTOR</span>
+          <div className="flex items-center gap-1.5 opacity-60 text-brand">
+            <Link2 className="size-4" />
+            <span className="text-xs font-semibold tracking-tight text-foreground">Snip</span>
           </div>
           <p className="text-xs text-muted-foreground">
             This project is a part of a hackathon run by{" "}

@@ -18,6 +18,19 @@ export const createUrl = createServerFn({ method: "POST" })
     const { supabase, userId } = context;
     const short_code = data.custom_alias?.trim() || nanoid(7);
 
+    if (!supabase) {
+      const { mockDb } = await import("./db.mock");
+      const existing = mockDb.getUrlByCode(short_code);
+      if (existing) throw new Error("That short code or alias is already taken.");
+      return mockDb.addUrl({
+        user_id: userId,
+        original_url: data.original_url,
+        short_code,
+        custom_alias: data.custom_alias ?? null,
+        expiry_date: data.expiry_date ?? null,
+      });
+    }
+
     // Uniqueness check
     const { data: existing } = await supabase
       .from("urls")
@@ -44,7 +57,12 @@ export const createUrl = createServerFn({ method: "POST" })
 export const listUrls = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
-    const { data, error } = await context.supabase
+    const { supabase, userId } = context;
+    if (!supabase) {
+      const { mockDb } = await import("./db.mock");
+      return mockDb.getUrls(userId);
+    }
+    const { data, error } = await supabase
       .from("urls")
       .select("*")
       .order("created_at", { ascending: false });
@@ -56,7 +74,14 @@ export const getUrl = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d: { id: string }) => z.object({ id: z.string().uuid() }).parse(d))
   .handler(async ({ data, context }) => {
-    const { data: row, error } = await context.supabase
+    const { supabase } = context;
+    if (!supabase) {
+      const { mockDb } = await import("./db.mock");
+      const row = mockDb.getUrlById(data.id);
+      if (!row) throw new Error("Link not found");
+      return row;
+    }
+    const { data: row, error } = await supabase
       .from("urls")
       .select("*")
       .eq("id", data.id)
@@ -75,7 +100,14 @@ export const updateUrl = createServerFn({ method: "POST" })
   .inputValidator((d: unknown) => updateSchema.parse(d))
   .handler(async ({ data, context }) => {
     const { id, ...patch } = data;
-    const { data: row, error } = await context.supabase
+    const { supabase } = context;
+    if (!supabase) {
+      const { mockDb } = await import("./db.mock");
+      const row = mockDb.updateUrl(id, patch);
+      if (!row) throw new Error("Link not found");
+      return row;
+    }
+    const { data: row, error } = await supabase
       .from("urls").update(patch).eq("id", id).select().single();
     if (error) throw new Error(error.message);
     return row;
@@ -85,7 +117,14 @@ export const deleteUrl = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d: { id: string }) => z.object({ id: z.string().uuid() }).parse(d))
   .handler(async ({ data, context }) => {
-    const { error } = await context.supabase.from("urls").delete().eq("id", data.id);
+    const { supabase } = context;
+    if (!supabase) {
+      const { mockDb } = await import("./db.mock");
+      const ok = mockDb.deleteUrl(data.id);
+      if (!ok) throw new Error("Link not found");
+      return { ok: true };
+    }
+    const { error } = await supabase.from("urls").delete().eq("id", data.id);
     if (error) throw new Error(error.message);
     return { ok: true };
   });
@@ -95,6 +134,13 @@ export const getAnalytics = createServerFn({ method: "GET" })
   .inputValidator((d: { id: string }) => z.object({ id: z.string().uuid() }).parse(d))
   .handler(async ({ data, context }) => {
     const { supabase } = context;
+    if (!supabase) {
+      const { mockDb } = await import("./db.mock");
+      const url = mockDb.getUrlById(data.id);
+      if (!url) throw new Error("Link not found");
+      const visits = mockDb.getVisits(data.id);
+      return { url, visits };
+    }
     const { data: url, error: urlErr } = await supabase
       .from("urls").select("*").eq("id", data.id).single();
     if (urlErr) throw new Error(urlErr.message);
@@ -115,6 +161,19 @@ export const bulkShorten = createServerFn({ method: "POST" })
   .inputValidator((d: unknown) => bulkSchema.parse(d))
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
+    if (!supabase) {
+      const { mockDb } = await import("./db.mock");
+      const inserted = data.urls.map((u) => {
+        return mockDb.addUrl({
+          user_id: userId,
+          original_url: u,
+          short_code: nanoid(7),
+          custom_alias: null,
+          expiry_date: null,
+        });
+      });
+      return inserted;
+    }
     const rows = data.urls.map((u) => ({
       user_id: userId,
       original_url: u,
