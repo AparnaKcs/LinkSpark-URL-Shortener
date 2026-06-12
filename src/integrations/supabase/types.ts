@@ -14,7 +14,107 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      profiles: {
+        Row: {
+          created_at: string
+          email: string | null
+          id: string
+          name: string | null
+        }
+        Insert: {
+          created_at?: string
+          email?: string | null
+          id: string
+          name?: string | null
+        }
+        Update: {
+          created_at?: string
+          email?: string | null
+          id?: string
+          name?: string | null
+        }
+        Relationships: []
+      }
+      urls: {
+        Row: {
+          click_count: number
+          created_at: string
+          custom_alias: string | null
+          expiry_date: string | null
+          id: string
+          last_visited_at: string | null
+          original_url: string
+          short_code: string
+          user_id: string
+        }
+        Insert: {
+          click_count?: number
+          created_at?: string
+          custom_alias?: string | null
+          expiry_date?: string | null
+          id?: string
+          last_visited_at?: string | null
+          original_url: string
+          short_code: string
+          user_id: string
+        }
+        Update: {
+          click_count?: number
+          created_at?: string
+          custom_alias?: string | null
+          expiry_date?: string | null
+          id?: string
+          last_visited_at?: string | null
+          original_url?: string
+          short_code?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      visits: {
+        Row: {
+          browser: string | null
+          city: string | null
+          country: string | null
+          device: string | null
+          id: string
+          ip_address: string | null
+          os: string | null
+          timestamp: string
+          url_id: string
+        }
+        Insert: {
+          browser?: string | null
+          city?: string | null
+          country?: string | null
+          device?: string | null
+          id?: string
+          ip_address?: string | null
+          os?: string | null
+          timestamp?: string
+          url_id: string
+        }
+        Update: {
+          browser?: string | null
+          city?: string | null
+          country?: string | null
+          device?: string | null
+          id?: string
+          ip_address?: string | null
+          os?: string | null
+          timestamp?: string
+          url_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "visits_url_id_fkey"
+            columns: ["url_id"]
+            isOneToOne: false
+            referencedRelation: "urls"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
