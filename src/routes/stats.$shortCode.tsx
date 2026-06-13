@@ -16,7 +16,7 @@ import { Link2 } from "lucide-react";
 export const Route = createFileRoute("/stats/$shortCode")({
   head: ({ params }) => ({
     meta: [
-      { title: `Stats /${params.shortCode} — Snip` },
+      { title: `Stats /${params.shortCode} — Vektor` },
       { name: "description", content: `Public click analytics for /r/${params.shortCode}` },
     ],
   }),
@@ -35,9 +35,11 @@ function PublicStats() {
     <div className="min-h-screen bg-background">
       <nav className="border-b border-border bg-background/80 backdrop-blur-sm">
         <div className="max-w-5xl mx-auto px-6 h-14 flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-1.5 text-brand">
-            <Link2 className="size-5" />
-            <span className="font-semibold tracking-tight text-foreground">Snip</span>
+          <Link to="/" className="flex items-center gap-2 hover:opacity-95 transition-opacity">
+            <div className="size-6 bg-primary rounded-sm flex items-center justify-center">
+              <div className="size-2 bg-card rotate-45" />
+            </div>
+            <span className="font-bold tracking-tight text-foreground">VEKTOR</span>
           </Link>
           <span className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">
             Public Stats

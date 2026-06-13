@@ -22,10 +22,12 @@ export function AppNav({ email }: { email?: string | null }) {
         <div className="flex items-center gap-2">
           <Link
             to="/"
-            className="flex items-center gap-1.5 text-brand hover:opacity-95 transition-opacity"
+            className="flex items-center gap-2 hover:opacity-95 transition-opacity"
           >
-            <Link2 className="size-5 text-primary" />
-            <span className="font-semibold text-lg tracking-tight text-foreground">Snip</span>
+            <div className="size-6 bg-primary rounded-sm flex items-center justify-center">
+              <div className="size-2 bg-card rotate-45" />
+            </div>
+            <span className="font-bold tracking-tight text-foreground">VEKTOR</span>
           </Link>
         </div>
         <div className="flex items-center gap-6">

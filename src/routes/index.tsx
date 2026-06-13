@@ -3,7 +3,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Snip — URL Shortener with Analytics" },
+      { title: "Vektor — URL Shortener with Analytics" },
       {
         name: "description",
         content:
@@ -19,7 +19,12 @@ function Landing() {
     <div className="min-h-screen bg-transparent text-foreground">
       <nav className="border-b border-border bg-card/45 backdrop-blur-md sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-6 h-14 flex items-center justify-between">
-          <div />
+          <Link to="/" className="flex items-center gap-2 hover:opacity-95 transition-opacity">
+            <div className="size-6 bg-primary rounded-sm flex items-center justify-center">
+              <div className="size-2 bg-card rotate-45" />
+            </div>
+            <span className="font-bold tracking-tight text-foreground">VEKTOR</span>
+          </Link>
           <div className="flex items-center gap-2">
             <Link
               to="/auth"
@@ -58,12 +63,6 @@ function Landing() {
               className="bg-brand text-brand-foreground px-5 py-2.5 rounded-md text-sm font-semibold shadow-md hover:shadow-lg hover:brightness-110 transition duration-300 font-bold"
             >
               Create your first link →
-            </Link>
-            <Link
-              to="/auth"
-              className="border border-border bg-card px-5 py-2.5 rounded-md text-sm font-semibold text-foreground hover:bg-muted/15 transition duration-300"
-            >
-              Sign in
             </Link>
           </div>
         </section>
@@ -116,9 +115,12 @@ function Landing() {
 
       <footer className="border-t border-border py-10 mt-10">
         <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-          <div className="flex items-center gap-1.5 opacity-80 text-brand">
-            <span className="text-xs font-semibold tracking-tight text-foreground">Snip</span>
-          </div>
+          <Link to="/" className="flex items-center gap-2 opacity-85 hover:opacity-100 transition-opacity">
+            <div className="size-5 bg-primary rounded-sm flex items-center justify-center">
+              <div className="size-1.5 bg-card rotate-45" />
+            </div>
+            <span className="text-xs font-bold tracking-tight text-foreground">VEKTOR</span>
+          </Link>
           <p className="text-xs text-muted-foreground font-semibold">
             This project is a part of a hackathon run by{" "}
             <a className="underline hover:text-primary" href="https://katomaran.com">

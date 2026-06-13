@@ -23,7 +23,7 @@ import {
 } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
-  head: () => ({ meta: [{ title: "Dashboard — Snip" }] }),
+  head: () => ({ meta: [{ title: "Dashboard — Vektor" }] }),
   component: Dashboard,
 });
 
@@ -138,9 +138,20 @@ function Dashboard() {
   function submitCreate(e: React.FormEvent) {
     e.preventDefault();
     try {
+      let formattedUrl = longUrl.trim();
+      if (formattedUrl && !/^https?:\/\//i.test(formattedUrl)) {
+        formattedUrl = `https://${formattedUrl}`;
+      }
+
+      if (expiryType === "custom" && expiry) {
+        if (new Date(expiry) <= new Date()) {
+          throw new Error("Expiry date must be in the future");
+        }
+      }
+
       const parsed = z
         .object({
-          original_url: z.string().trim().url("Invalid URL"),
+          original_url: z.string().trim().url("Please enter a valid URL (e.g., https://example.com)"),
           custom_alias: z
             .string()
             .regex(
@@ -151,7 +162,7 @@ function Dashboard() {
             .nullable(),
         })
         .parse({
-          original_url: longUrl,
+          original_url: formattedUrl,
           custom_alias: alias || undefined,
         });
 
@@ -171,12 +182,23 @@ function Dashboard() {
     e.preventDefault();
     if (!editLink) return;
     try {
+      let formattedUrl = editOriginalUrl.trim();
+      if (formattedUrl && !/^https?:\/\//i.test(formattedUrl)) {
+        formattedUrl = `https://${formattedUrl}`;
+      }
+
+      if (editExpiry) {
+        if (new Date(editExpiry) <= new Date()) {
+          throw new Error("Expiry date must be in the future");
+        }
+      }
+
       const parsed = z
         .object({
-          original_url: z.string().trim().url("Invalid URL"),
+          original_url: z.string().trim().url("Please enter a valid URL (e.g., https://example.com)"),
         })
         .parse({
-          original_url: editOriginalUrl,
+          original_url: formattedUrl,
         });
 
       updateMut.mutate({
@@ -223,12 +245,18 @@ function Dashboard() {
   function submitBulk() {
     const lines = bulkText
       .split(/\r?\n/)
-      .map((l) => l.split(",")[0].trim())
-      .filter((l) => {
-        if (!l) return false;
-        const lower = l.toLowerCase();
-        return lower !== "original_url" && lower !== "url" && lower !== "original url";
-      });
+      .map((l) => {
+        let val = l.split(",")[0].trim();
+        const lower = val.toLowerCase();
+        if (lower === "original_url" || lower === "url" || lower === "original url") {
+          return "";
+        }
+        if (val && !/^https?:\/\//i.test(val)) {
+          val = `https://${val}`;
+        }
+        return val;
+      })
+      .filter(Boolean);
     if (!lines.length) return toast.error("Paste at least one URL");
     bulkMut.mutate({ data: { urls: lines } });
   }

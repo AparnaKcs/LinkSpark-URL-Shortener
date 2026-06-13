@@ -16,7 +16,7 @@ import { getAnalytics } from "@/lib/urls.functions";
 import { ArrowLeft } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/analytics/$id")({
-  head: () => ({ meta: [{ title: "Analytics — Snip" }] }),
+  head: () => ({ meta: [{ title: "Analytics — Vektor" }] }),
   component: AnalyticsPage,
 });
 

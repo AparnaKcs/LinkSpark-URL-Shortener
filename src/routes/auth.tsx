@@ -33,11 +33,7 @@ function AuthPage() {
     }
   }, [errParam]);
 
-  useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => {
-      if (data.session) navigate({ to: "/dashboard", replace: true });
-    });
-  }, [navigate]);
+
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -45,19 +41,19 @@ function AuthPage() {
     try {
       const parsed = z
         .object({
-          email: z.string().trim().email(),
-          password: z.string().min(6, "Min 6 characters"),
+          email: z.string().trim().email("Please enter a valid email address (e.g., name@example.com)."),
+          password: z.string().min(6, "Password must be at least 6 characters."),
           username:
             mode === "signup"
               ? z
                   .string()
                   .trim()
                   .toLowerCase()
-                  .min(3, "Min 3 characters")
-                  .max(30)
+                  .min(3, "Username must be at least 3 characters.")
+                  .max(30, "Username must be at most 30 characters.")
                   .regex(
                     /^[a-z0-9_-]+$/,
-                    "Username must be lowercase alphanumeric, dash or underscore only",
+                    "Username must be lowercase alphanumeric, dash, or underscore only.",
                   )
               : z.string().optional(),
         })
