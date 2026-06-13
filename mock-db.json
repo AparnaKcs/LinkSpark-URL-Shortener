@@ -13,8 +13,8 @@
     },
     {
       "id": "256d2f5e-12e6-4761-8928-32657c12ed68",
-      "click_count": 1,
-      "last_visited_at": "2026-06-12T18:45:41.671Z",
+      "click_count": 2,
+      "last_visited_at": "2026-06-13T11:20:11.213Z",
       "created_at": "2026-06-12T18:45:10.093Z",
       "user_id": "00000000-0000-0000-0000-000000000000",
       "original_url": "https://www.nykaa.com/",
@@ -38,6 +38,17 @@
     {
       "id": "7c16e601-fda4-492d-b883-1287129372c3",
       "timestamp": "2026-06-12T18:45:41.671Z",
+      "url_id": "256d2f5e-12e6-4761-8928-32657c12ed68",
+      "ip_address": null,
+      "browser": "Chrome",
+      "device": "Desktop",
+      "os": "Windows",
+      "country": null,
+      "city": null
+    },
+    {
+      "id": "4dcae4a5-68a4-4ca4-93c7-21fe353ad489",
+      "timestamp": "2026-06-13T11:20:11.213Z",
       "url_id": "256d2f5e-12e6-4761-8928-32657c12ed68",
       "ip_address": null,
       "browser": "Chrome",

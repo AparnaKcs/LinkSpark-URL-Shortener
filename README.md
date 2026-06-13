@@ -27,15 +27,15 @@ A production-grade URL shortener with real-time analytics, QR codes, custom alia
 
 ## Routes
 
-| Path | Description |
-| --- | --- |
-| `/` | Landing page |
-| `/auth` | Sign in / sign up |
-| `/dashboard` | Link table, create form, bulk import (protected) |
-| `/analytics/:id` | Per-link analytics (protected) |
-| `/profile` | Account info (protected) |
-| `/stats/:shortCode` | Public stats (no auth) |
-| `/r/:shortCode` | Server-side redirect + visit tracking |
+| Path                | Description                                      |
+| ------------------- | ------------------------------------------------ |
+| `/`                 | Landing page                                     |
+| `/auth`             | Sign in / sign up                                |
+| `/dashboard`        | Link table, create form, bulk import (protected) |
+| `/analytics/:id`    | Per-link analytics (protected)                   |
+| `/profile`          | Account info (protected)                         |
+| `/stats/:shortCode` | Public stats (no auth)                           |
+| `/r/:shortCode`     | Server-side redirect + visit tracking            |
 
 ## Database
 
@@ -43,14 +43,14 @@ Three tables in `public`: `profiles`, `urls`, `visits`. RLS scopes writes to own
 
 ## Local Setup
 
-This project runs on Lovable Cloud — no manual environment setup needed in the Lovable preview. To run locally:
+To run this project locally:
 
 ```bash
 bun install
 bun run dev
 ```
 
-Required env vars (auto-populated in `.env` by Lovable Cloud):
+Required env vars (configured in `.env`):
 
 ```
 VITE_SUPABASE_URL

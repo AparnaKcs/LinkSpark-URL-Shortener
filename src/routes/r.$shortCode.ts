@@ -8,7 +8,12 @@ export const Route = createFileRoute("/r/$shortCode")({
     handlers: {
       GET: async ({ params, request }) => {
         const code = params.shortCode;
-        let url: { id: string; original_url: string; expiry_date: string | null; click_count: number } | null = null;
+        let url: {
+          id: string;
+          original_url: string;
+          expiry_date: string | null;
+          click_count: number;
+        } | null = null;
         let isMockUrl = false;
 
         try {
@@ -60,7 +65,37 @@ export const Route = createFileRoute("/r/$shortCode")({
           request.headers.get("cf-connecting-ip") ??
           request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??
           null;
-        const country = request.headers.get("cf-ipcountry") ?? null;
+        
+        let countryName = request.headers.get("cf-ipcountry") ?? null;
+        let cityName = null;
+
+        if (!countryName || countryName === "XX") {
+          try {
+            const isLocal = !ip || 
+              ip === "127.0.0.1" || 
+              ip === "::1" || 
+              ip.includes("127.0.0.1") || 
+              ip.startsWith("::ffff:127.") ||
+              ip.startsWith("192.168.") || 
+              ip.startsWith("10.") || 
+              ip.startsWith("fe80");
+
+            const endpoint = isLocal
+              ? `http://ip-api.com/json/`
+              : `http://ip-api.com/json/${ip}`;
+
+            const res = await fetch(endpoint);
+            if (res.ok) {
+              const geo = await res.json();
+              if (geo && geo.status === "success") {
+                countryName = geo.country || countryName;
+                cityName = geo.city || null;
+              }
+            }
+          } catch (e) {
+            console.error("IP Geolocation lookup failed:", e);
+          }
+        }
 
         if (isMockUrl || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
           const { mockDb } = await import("@/lib/db.mock");
@@ -70,29 +105,21 @@ export const Route = createFileRoute("/r/$shortCode")({
             browser,
             device,
             os,
-            country,
-            city: null,
+            country: countryName,
+            city: cityName,
           });
         } else {
           try {
             const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-            await Promise.all([
-              supabaseAdmin.from("visits").insert({
-                url_id: url.id,
-                ip_address: ip,
-                browser,
-                device,
-                os,
-                country,
-              }),
-              supabaseAdmin
-                .from("urls")
-                .update({
-                  click_count: (url.click_count ?? 0) + 1,
-                  last_visited_at: new Date().toISOString(),
-                })
-                .eq("id", url.id),
-            ]);
+            await supabaseAdmin.from("visits").insert({
+              url_id: url.id,
+              ip_address: ip,
+              browser,
+              device,
+              os,
+              country: countryName,
+              city: cityName,
+            });
           } catch (err) {
             console.error("Failed to write redirect tracking to Supabase:", err);
           }

@@ -9,31 +9,45 @@ export const Route = createFileRoute("/_authenticated/profile")({
 });
 
 function ProfilePage() {
-  const [user, setUser] = useState<{ id: string; email?: string; created_at?: string } | null>(null);
-  const [profile, setProfile] = useState<{ name: string | null; email: string | null } | null>(null);
+  const [user, setUser] = useState<{ id: string; email?: string; created_at?: string } | null>(
+    null,
+  );
+  const [profile, setProfile] = useState<{
+    email: string | null;
+    username: string | null;
+  } | null>(null);
 
   useEffect(() => {
     (async () => {
       const { data: u } = await supabase.auth.getUser();
-      setUser(u.user ? { id: u.user.id, email: u.user.email, created_at: u.user.created_at } : null);
+      setUser(
+        u.user ? { id: u.user.id, email: u.user.email, created_at: u.user.created_at } : null,
+      );
       if (u.user) {
-        const { data } = await supabase.from("profiles").select("name, email").eq("id", u.user.id).maybeSingle();
+        const { data } = await supabase
+          .from("profiles")
+          .select("email, username")
+          .eq("id", u.user.id)
+          .maybeSingle();
         setProfile(data);
       }
     })();
   }, []);
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-transparent text-foreground">
       <AppNav email={user?.email ?? null} />
       <main className="max-w-2xl mx-auto px-6 py-10">
-        <h1 className="text-2xl font-semibold tracking-tight mb-1">Profile</h1>
+        <h1 className="text-2xl font-bold tracking-tight mb-1 text-foreground">Profile</h1>
         <p className="text-sm text-muted-foreground mb-6">Your account information.</p>
-        <div className="bg-surface ring-1 ring-border rounded-xl p-6 space-y-4">
-          <Row label="Name" value={profile?.name ?? "—"} />
+        <div className="bg-card backdrop-blur-md border border-border rounded-xl p-6 space-y-4 shadow-sm">
+          <Row label="Username" value={profile?.username ?? "—"} />
           <Row label="Email" value={user?.email ?? "—"} />
           <Row label="User ID" value={user?.id ?? "—"} mono />
-          <Row label="Joined" value={user?.created_at ? new Date(user.created_at).toLocaleString() : "—"} />
+          <Row
+            label="Joined"
+            value={user?.created_at ? new Date(user.created_at).toLocaleString() : "—"}
+          />
         </div>
       </main>
     </div>
@@ -42,9 +56,13 @@ function ProfilePage() {
 
 function Row({ label, value, mono }: { label: string; value: string; mono?: boolean }) {
   return (
-    <div className="flex justify-between items-center pb-3 border-b border-border last:border-0 last:pb-0">
-      <span className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">{label}</span>
-      <span className={`text-sm ${mono ? "font-mono" : ""}`}>{value}</span>
+    <div className="flex justify-between items-center pb-3 border-b border-border/40 last:border-0 last:pb-0">
+      <span className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
+        {label}
+      </span>
+      <span className={`text-sm font-semibold text-foreground ${mono ? "font-mono text-xs" : ""}`}>
+        {value}
+      </span>
     </div>
   );
 }

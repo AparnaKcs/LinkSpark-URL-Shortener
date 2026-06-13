@@ -65,6 +65,7 @@ export const listUrls = createServerFn({ method: "GET" })
     const { data, error } = await supabase
       .from("urls")
       .select("*")
+      .eq("user_id", userId)
       .order("created_at", { ascending: false });
     if (error) throw new Error(error.message);
     return data;
@@ -81,11 +82,7 @@ export const getUrl = createServerFn({ method: "GET" })
       if (!row) throw new Error("Link not found");
       return row;
     }
-    const { data: row, error } = await supabase
-      .from("urls")
-      .select("*")
-      .eq("id", data.id)
-      .single();
+    const { data: row, error } = await supabase.from("urls").select("*").eq("id", data.id).single();
     if (error) throw new Error(error.message);
     return row;
   });
@@ -108,7 +105,11 @@ export const updateUrl = createServerFn({ method: "POST" })
       return row;
     }
     const { data: row, error } = await supabase
-      .from("urls").update(patch).eq("id", id).select().single();
+      .from("urls")
+      .update(patch)
+      .eq("id", id)
+      .select()
+      .single();
     if (error) throw new Error(error.message);
     return row;
   });
@@ -142,12 +143,18 @@ export const getAnalytics = createServerFn({ method: "GET" })
       return { url, visits };
     }
     const { data: url, error: urlErr } = await supabase
-      .from("urls").select("*").eq("id", data.id).single();
+      .from("urls")
+      .select("*")
+      .eq("id", data.id)
+      .single();
     if (urlErr) throw new Error(urlErr.message);
 
     const { data: visits, error: visErr } = await supabase
-      .from("visits").select("*").eq("url_id", data.id)
-      .order("timestamp", { ascending: false }).limit(500);
+      .from("visits")
+      .select("*")
+      .eq("url_id", data.id)
+      .order("timestamp", { ascending: false })
+      .limit(500);
     if (visErr) throw new Error(visErr.message);
 
     return { url, visits: visits ?? [] };

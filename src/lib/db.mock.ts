@@ -68,7 +68,9 @@ export const mockDb = {
     return db.urls.find((u) => u.short_code === code) ?? null;
   },
 
-  addUrl(url: Omit<MockUrl, "id" | "click_count" | "last_visited_at" | "created_at"> & { id?: string }): MockUrl {
+  addUrl(
+    url: Omit<MockUrl, "id" | "click_count" | "last_visited_at" | "created_at"> & { id?: string },
+  ): MockUrl {
     const db = readDb();
     const newUrl: MockUrl = {
       id: url.id || crypto.randomUUID(),
