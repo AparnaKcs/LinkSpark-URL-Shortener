@@ -115,6 +115,36 @@ graph TD
     Express -->|Log Visits & Increment Clicks| Supabase
 ```
 
+## 📊 Project Flowchart
+
+```mermaid
+graph TD
+    Start(["Start - User visits LinkSpark"]) --> AuthCheck{"Is authenticated?"}
+    
+    AuthCheck -- No --> AuthPage["Auth Page - Sign In or Sign Up"]
+    AuthPage --> AuthSuccess["Auth Success - JWT token saved"]
+    AuthSuccess --> Dashboard["User Dashboard"]
+    
+    AuthCheck -- Yes --> Dashboard
+    
+    Dashboard --> CreateLink["Create Shortened Link"]
+    Dashboard --> BulkImport["Bulk Import CSV"]
+    
+    CreateLink --> Validation{"Validates Custom Alias / Expiry?"}
+    BulkImport --> Validation
+    
+    Validation -- Invalid --> ErrorToast["Show Error Toast"]
+    Validation -- Valid --> SaveDB["Express Backend saves Link to DB"]
+    SaveDB --> ShowLink["Display Shortened Link & QR Code"]
+    
+    ShowLink --> UserClick(["End-User clicks Short Link - /r/:shortCode"])
+    
+    UserClick --> ExpressRedirect["Express Redirect Handler Intercepts"]
+    ExpressRedirect --> LogAnalytics["Log User-Agent and Geolocate IP"]
+    LogAnalytics --> SaveVisit["Save Visit Record & Increment Clicks"]
+    SaveVisit --> RedirectClient["Redirect Client Browser to Original URL"]
+```
+
 ### Key Components:
 - **`server/server.cjs`** — Standalone Node.js Express server with Supabase client-based JWT validation, REST API, analytics geolocating, and redirection.
 - **`src/lib/urls.functions.ts`** — Client server function bridges that forward requests to the Express server API.
