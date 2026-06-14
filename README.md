@@ -88,20 +88,20 @@ LinkSpark performs the following functions:
 
 ```mermaid
 graph TD
-    subgraph Client [Client Side]
+    subgraph Client ["Client Side"]
         Browser["Browser (React 19 + TanStack Router)"]
     end
     
-    subgraph FrontendServer [Frontend Server (TanStack Start / SSR)]
+    subgraph FrontendServer ["Frontend Server (TanStack Start / SSR)"]
         API["Server Functions (urls.functions.ts / stats.functions.ts)"]
         Redirect["Redirect Handler (/r/:shortCode)"]
     end
 
-    subgraph BackendServer [Express Backend Server (port 3000)]
+    subgraph BackendServer ["Express Backend Server (port 3000)"]
         Express["Express.js REST API & Redirect Handler"]
     end
     
-    subgraph Database [Data & Auth Layer]
+    subgraph Database ["Data & Auth Layer"]
         Supabase["Supabase PostgreSQL (RLS Enforced)"]
         Auth["Supabase Auth (JWT Sessions)"]
     end
