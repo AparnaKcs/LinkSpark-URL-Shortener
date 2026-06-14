@@ -5,9 +5,7 @@ A production-grade URL shortener with real-time analytics, QR codes, custom alia
 ---
 
 ## 🎬 Demonstration Video
-- **[Link to Demo Video](YOUR_VIDEO_LINK_HERE)** 
-
-*Note: Please replace the placeholder link above with your Loom or YouTube video link demonstrating and explaining your application.*
+- **[Link to Demo Video](https://youtu.be/vxRkU_7Druk)**
 
 ---
 
