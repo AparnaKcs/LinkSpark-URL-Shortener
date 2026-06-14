@@ -5,7 +5,7 @@ A production-grade URL shortener with real-time analytics, QR codes, custom alia
 ---
 
 ## 🎬 Demonstration Video
-- **[Link to Demo Video](https://youtu.be/vxRkU_7Druk)**
+- **[Link to Demo Video](https://drive.google.com/drive/u/0/folders/1uhQ_D5NLr8wZE17Z-8I9I7YdKtgu5v8M)**
 
 ---
 
