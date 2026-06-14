@@ -16,7 +16,7 @@ import { getAnalytics } from "@/lib/urls.functions";
 import { ArrowLeft } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/analytics/$id")({
-  head: () => ({ meta: [{ title: "Analytics — Vektor" }] }),
+  head: () => ({ meta: [{ title: "Analytics — LinkSpark" }] }),
   component: AnalyticsPage,
 });
 
@@ -32,7 +32,7 @@ function AnalyticsPage() {
   if (isLoading || !data) {
     return (
       <div className="min-h-screen bg-transparent text-foreground">
-        <AppNav email={email} />
+        <AppNav />
         <div className="max-w-7xl mx-auto px-6 py-10 text-sm text-muted-foreground">
           Loading analytics…
         </div>
@@ -77,7 +77,7 @@ function AnalyticsPage() {
 
   return (
     <div className="min-h-screen bg-transparent text-foreground">
-      <AppNav email={email} />
+      <AppNav />
       <main className="max-w-7xl mx-auto px-6 py-10 space-y-8">
         {/* Header */}
         <div>

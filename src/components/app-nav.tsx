@@ -2,11 +2,31 @@ import { Link, useNavigate, useRouter } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
 import { useQueryClient } from "@tanstack/react-query";
 import { Link2, LogOut } from "lucide-react";
+import { useEffect, useState } from "react";
 
-export function AppNav({ email }: { email?: string | null }) {
+export function AppNav({ username: customUsername }: { username?: string | null }) {
   const navigate = useNavigate();
   const router = useRouter();
   const qc = useQueryClient();
+  const [username, setUsername] = useState<string | null>(customUsername ?? null);
+
+  useEffect(() => {
+    if (customUsername !== undefined) {
+      setUsername(customUsername);
+      return;
+    }
+    (async () => {
+      const { data: u } = await supabase.auth.getUser();
+      if (u.user) {
+        const { data } = await supabase
+          .from("profiles")
+          .select("username")
+          .eq("id", u.user.id)
+          .maybeSingle();
+        setUsername(data?.username || u.user.user_metadata?.username || u.user.email?.split("@")[0] || null);
+      }
+    })();
+  }, [customUsername]);
 
   async function signOut() {
     await qc.cancelQueries();
@@ -27,7 +47,7 @@ export function AppNav({ email }: { email?: string | null }) {
             <div className="size-6 bg-primary rounded-sm flex items-center justify-center">
               <div className="size-2 bg-card rotate-45" />
             </div>
-            <span className="font-bold tracking-tight text-foreground">VEKTOR</span>
+            <span className="font-bold tracking-tight text-foreground">LINKSPARK</span>
           </Link>
         </div>
         <div className="flex items-center gap-6">
@@ -38,8 +58,8 @@ export function AppNav({ email }: { email?: string | null }) {
             Dashboard
           </Link>
           <div className="flex items-center gap-4">
-            {email && (
-              <span className="hidden sm:block text-xs text-primary font-mono">{email}</span>
+            {username && (
+              <span className="hidden sm:block text-xs text-primary font-mono">{username}</span>
             )}
             <button
               onClick={signOut}

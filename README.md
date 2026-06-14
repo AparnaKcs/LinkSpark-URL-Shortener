@@ -1,88 +1,136 @@
-# Vektor — URL Shortener with Analytics
+# LinkSpark — URL Shortener with Analytics
 
 A production-grade URL shortener with real-time analytics, QR codes, custom aliases, expiry, public stats, and bulk CSV import.
 
-## Stack
+---
 
-- **Frontend & backend in one codebase:** React 19 + TanStack Start (file-based routing, type-safe server functions over RPC)
-- **Database & Auth:** PostgreSQL with Row-Level Security
-- **Styling:** Tailwind CSS v4, design tokens in `src/styles.css`
-- **Charts:** Recharts
-- **Validation:** Zod
-- **QR:** `qrcode`; short-code generation: `nanoid`
+## 🎬 Demonstration Video
+- **[Link to Demo Video](YOUR_VIDEO_LINK_HERE)** 
 
-> Spec called for Node.js + Express. This implementation uses TanStack Start server functions (`createServerFn`) instead — same REST-style request/response contract, same Postgres, same JWT-backed auth. All functional requirements are met.
+*Note: Please replace the placeholder link above with your Loom or YouTube video link demonstrating and explaining your application.*
 
-## Features
+---
 
-- Email/password auth (JWT sessions)
-- Create, edit, delete shortened URLs (per-user, enforced by RLS)
-- Custom aliases (`/r/my-alias`) with uniqueness validation
-- Optional expiry — expired links return a 410 page
-- Server-side `/r/:shortCode` redirect that records a visit + increments click count
-- Per-link analytics: total/today/7d clicks, daily trend, hourly throughput, browser/device/OS breakdown, recent visit log
-- QR code generation + PNG download
-- Bulk CSV import (paste up to 200 URLs, get a CSV back)
-- Public stats page at `/stats/:shortCode` (no auth, sensitive fields hidden)
+## 🛠️ Setup & Running Instructions
 
-## Routes
+To run this project locally, follow these steps:
 
-| Path                | Description                                      |
-| ------------------- | ------------------------------------------------ |
-| `/`                 | Landing page                                     |
-| `/auth`             | Sign in / sign up                                |
-| `/dashboard`        | Link table, create form, bulk import (protected) |
-| `/analytics/:id`    | Per-link analytics (protected)                   |
-| `/profile`          | Account info (protected)                         |
-| `/stats/:shortCode` | Public stats (no auth)                           |
-| `/r/:shortCode`     | Server-side redirect + visit tracking            |
+### Prerequisites
+- Node.js (v18 or higher) or Bun
+- A Supabase database project
 
-## Database
-
-Three tables in `public`: `profiles`, `urls`, `visits`. RLS scopes writes to owner; `urls` are publicly readable (for redirects and public stats); `visits` readable only by URL owner. Schema lives in `supabase/migrations/`.
-
-## Local Setup
-
-To run this project locally:
-
+### 1. Install Dependencies
 ```bash
+# Using npm
+npm install
+
+# Using bun
 bun install
-bun run dev
 ```
 
-Required env vars (configured in `.env`):
+### 2. Configure Environment Variables
+Create a `.env` file in the root directory and configure your credentials:
+```env
+VITE_SUPABASE_PROJECT_ID="your-project-id"
+VITE_SUPABASE_URL="https://your-project-id.supabase.co"
+VITE_SUPABASE_PUBLISHABLE_KEY="your-anon-key"
 
-```
-VITE_SUPABASE_URL
-VITE_SUPABASE_PUBLISHABLE_KEY
-SUPABASE_URL
-SUPABASE_PUBLISHABLE_KEY
-SUPABASE_SERVICE_ROLE_KEY
-```
-
-## Architecture
-
-```
-Browser (React + TanStack Router)
-    ↓ type-safe RPC (createServerFn) or fetch (/r/:code)
-TanStack Start server (Cloudflare Workers runtime)
-    ↓ supabase-js
-PostgreSQL (RLS-enforced)
+SUPABASE_PROJECT_ID="your-project-id"
+SUPABASE_URL="https://your-project-id.supabase.co"
+SUPABASE_PUBLISHABLE_KEY="your-anon-key"
+SUPABASE_SERVICE_ROLE_KEY="your-service-role-key"
 ```
 
-- `src/lib/urls.functions.ts` — auth-protected server functions (create, list, update, delete, analytics, bulk)
-- `src/lib/stats.functions.ts` — public-stats server function
-- `src/routes/r.$shortCode.ts` — server route that redirects and records visits
-- `src/integrations/supabase/auth-middleware.ts` — `requireSupabaseAuth` middleware
-- `src/integrations/supabase/client.server.ts` — admin client (used for redirect tracking + public stats)
+### 3. Start the Application Servers
+You must run both the backend Express API server and the frontend client development server:
 
-## Assumptions
+**Start the Express backend (runs on port 3000):**
+```bash
+npm run server
+```
 
-- Short codes live at `/r/:shortCode` (not the URL root) so they don't collide with the SPA's other routes
-- Geolocation is sourced from the edge `cf-ipcountry` header when available
-- Public stats expose totals, creation date, last visit, daily trend — not the destination URL or visitor IPs
-- Bulk import caps at 200 URLs per request and ignores any expiry/alias columns
-- Email confirmation is disabled in dev for faster testing
+**Start the React frontend (runs on port 8080):**
+```bash
+npm run dev
+```
+
+Open **[http://localhost:8080](http://localhost:8080)** in your browser.
+
+---
+
+## 📋 AI Planning Document
+
+### 1. Planning the App
+We planned the architecture of LinkSpark around three design goals: security (Row-Level Security), robust analytics (non-intrusive geolocating & client logging), and styling integrity (warm premium UI, solid black text readability).
+
+- **Database Layer**: Implemented three schemas (`profiles`, `urls`, `visits`) with triggers to auto-generate profile records upon auth signup and auto-increment short link visit aggregates.
+- **Backend Architecture**: Constructed a standalone Express.js backend that handles validation, persistence, IP-based geolocating, and server-side HTTP 302 redirects.
+- **Frontend Architecture**: Built a SPA using TanStack Router for route protection and layout styling, TanStack Query for cache invalidation, and custom server function wrappers to delegate state fetching to the Express REST API.
+- **Branding & Style**: Adopted a Burger King style guide theme consisting of warm cream backgrounds (`#f4f0ec`), warm borders (`#f0e6d7`), white cards, red brand accents (`#d62300`), and a global override ensuring all typography text is solid black (`#000000`) for high contrast legibility.
+
+### 2. Feature Listing & Documentation
+LinkSpark performs the following functions:
+
+- **User Authentication**: Secure signup and signin powered by Supabase Auth (JWT storage).
+- **Navbar Username Customization**: Displays the authenticated user's actual profile username (queried from the database `profiles` table) in the navbar instead of their email address.
+- **URL Shortener Generator**: Shortens URLs by creating unique 7-character nanoids or custom alphanumeric aliases (`^[a-zA-Z0-9_-]{3,32}$`).
+- **Expiration Configuration**: Optional custom expiry dates, marking links as `410 Gone` if clicked past their expiration timestamp.
+- **Bulk Import via CSV**: Redesigned Bulk Shorten modal allowing quick CSV uploads (separating "Upload CSV File" and "Download Template" actions) with server-side validation supporting up to 200 URLs in a single payload.
+- **Click Tracking & Geolocation Lookup**: Collects user-agent details (OS, Browser, Device) and geolocates incoming clicks by querying regional APIs on server-side redirection (`/r/:shortCode`).
+- **QR Code Generator**: Generates SVG QR codes instantly for user-facing links.
+- **Public Analytics Page**: Offers public statistics charts `/stats/:shortCode` showing anonymized click trends over a 30-day window.
+- **Interactive Analytics Dashboard**: Authenticated user panel offering deep breakdowns of browser, OS, device, and geolocation data.
+- **Protected Routing**: Intercepts unauthenticated sessions on dashboard routes, throwing an error redirect (`/auth?error=user_not_found`).
+
+---
+
+## 📐 Architecture Diagram of your Application
+
+```mermaid
+graph TD
+    subgraph Client [Client Side]
+        Browser["Browser (React 19 + TanStack Router)"]
+    end
+    
+    subgraph FrontendServer [Frontend Server (TanStack Start / SSR)]
+        API["Server Functions (urls.functions.ts / stats.functions.ts)"]
+        Redirect["Redirect Handler (/r/:shortCode)"]
+    end
+
+    subgraph BackendServer [Express Backend Server (port 3000)]
+        Express["Express.js REST API & Redirect Handler"]
+    end
+    
+    subgraph Database [Data & Auth Layer]
+        Supabase["Supabase PostgreSQL (RLS Enforced)"]
+        Auth["Supabase Auth (JWT Sessions)"]
+    end
+
+    Browser -->|RPC calls| API
+    Browser -->|Direct GET redirect| Redirect
+    API -->|Fetch /api/* (Forward Auth Header)| Express
+    Redirect -->|Fetch /r/* (Forward Client IP/UA)| Express
+    Express -->|Read/Write with RLS| Supabase
+    Express -->|Validate User Session| Auth
+    Express -->|Log Visits & Increment Clicks| Supabase
+```
+
+### Key Components:
+- **`server/server.cjs`** — Standalone Node.js Express server with Supabase client-based JWT validation, REST API, analytics geolocating, and redirection.
+- **`src/lib/urls.functions.ts`** — Client server function bridges that forward requests to the Express server API.
+- **`src/lib/stats.functions.ts`** — Public-stats helper forwarding queries to Express.
+- **`src/routes/r.$shortCode.ts`** — Proxy route that delegates client HTTP redirects directly to the Express redirect endpoint with original request headers forwarded.
+- **`src/components/app-nav.tsx`** — Responsive navigation component displaying profile usernames.
+- **`src/styles.css`** — Application styling utilizing Tailwind CSS v4 custom color palette.
+
+---
+
+## 💡 Assumptions Made
+
+- **Analytics Route Separator**: Short codes resolve at `/r/:shortCode` instead of the root `/` to prevent route collisions with layout and client-side page views.
+- **Public Anonymization**: The public stats page `/stats/:shortCode` exposes only non-sensitive aggregation data (clicks, date created, browsers/devices, click dates) to prevent exposing targets or IP data.
+- **Text Legibility**: Text styling is locked globally to solid black (`#000000`) for high visibility on all background surfaces.
+- **Automatic Username Coalescing**: If a profile row does not specify a custom username, the nav display defaults to the user's email prefix.
 
 ---
 

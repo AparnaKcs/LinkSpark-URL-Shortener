@@ -9,7 +9,8 @@
     "build:dev": "vite build --mode development",
     "preview": "vite preview",
     "lint": "eslint .",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "server": "node server/server.cjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
@@ -48,8 +49,11 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
+    "cors": "^2.8.6",
     "date-fns": "^4.1.0",
+    "dotenv": "^17.4.2",
     "embla-carousel-react": "^8.6.0",
+    "express": "^5.2.1",
     "input-otp": "^1.4.2",
     "lucide-react": "^0.575.0",
     "nanoid": "^5.1.11",
@@ -71,6 +75,8 @@
   "devDependencies": {
     "@eslint/js": "^9.32.0",
     "@lovable.dev/vite-tanstack-config": "^2.3.2",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
     "@types/node": "^22.16.5",
     "@types/qrcode": "^1.5.6",
     "@types/react": "^19.2.0",
@@ -83,6 +89,7 @@
     "eslint-plugin-react-refresh": "^0.4.20",
     "globals": "^15.15.0",
     "nitro": "3.0.260603-beta",
+    "nodemon": "^3.1.14",
     "prettier": "^3.7.3",
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.56.1",

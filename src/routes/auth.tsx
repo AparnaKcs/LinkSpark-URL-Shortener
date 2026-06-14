@@ -11,7 +11,7 @@ const searchSchema = z.object({
 
 export const Route = createFileRoute("/auth")({
   validateSearch: searchSchema,
-  head: () => ({ meta: [{ title: "Sign in — Vektor" }] }),
+  head: () => ({ meta: [{ title: "Sign in — LinkSpark" }] }),
   component: AuthPage,
 });
 
@@ -116,7 +116,7 @@ function AuthPage() {
           <div className="size-6 bg-primary rounded-sm flex items-center justify-center">
             <div className="size-2 bg-card rotate-45" />
           </div>
-          <span className="font-bold tracking-tight text-foreground">VEKTOR</span>
+          <span className="font-bold tracking-tight text-foreground">LINKSPARK</span>
         </Link>
         <div className="space-y-4 max-w-md">
           <p className="text-2xl font-bold tracking-tight text-balance text-foreground">
@@ -126,7 +126,6 @@ function AuthPage() {
             — Built for the Katomaran hackathon
           </p>
         </div>
-        <p className="text-xs text-muted-foreground font-mono">System status: Optimal</p>
       </div>
 
       <div className="flex items-center justify-center p-6">

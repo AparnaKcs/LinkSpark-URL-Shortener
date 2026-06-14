@@ -3,7 +3,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Vektor — URL Shortener with Analytics" },
+      { title: "LinkSpark — URL Shortener with Analytics" },
       {
         name: "description",
         content:
@@ -23,7 +23,7 @@ function Landing() {
             <div className="size-6 bg-primary rounded-sm flex items-center justify-center">
               <div className="size-2 bg-card rotate-45" />
             </div>
-            <span className="font-bold tracking-tight text-foreground">VEKTOR</span>
+            <span className="font-bold tracking-tight text-foreground">LINKSPARK</span>
           </Link>
           <div className="flex items-center gap-2">
             <Link
@@ -48,9 +48,7 @@ function Landing() {
         <section className="py-24 md:py-32 max-w-3xl">
           <h1 className="text-5xl md:text-7xl font-black tracking-tight text-balance text-foreground leading-tight">
             Smarter links, <br />
-            <span className="bg-gradient-to-r from-brand via-[#A28089] to-primary bg-clip-text text-transparent">
-              deeper insights.
-            </span>
+            deeper insights.
           </h1>
           <p className="mt-6 text-lg md:text-xl text-muted-foreground max-w-2xl text-pretty leading-relaxed font-semibold">
             Create short, custom links in seconds and track performance in real time. Simple, fast,
@@ -119,7 +117,7 @@ function Landing() {
             <div className="size-5 bg-primary rounded-sm flex items-center justify-center">
               <div className="size-1.5 bg-card rotate-45" />
             </div>
-            <span className="text-xs font-bold tracking-tight text-foreground">VEKTOR</span>
+            <span className="text-xs font-bold tracking-tight text-foreground">LINKSPARK</span>
           </Link>
           <p className="text-xs text-muted-foreground font-semibold">
             This project is a part of a hackathon run by{" "}

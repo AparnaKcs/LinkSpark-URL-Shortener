@@ -4,7 +4,7 @@ import { AppNav } from "@/components/app-nav";
 import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/_authenticated/profile")({
-  head: () => ({ meta: [{ title: "Profile — Vektor" }] }),
+  head: () => ({ meta: [{ title: "Profile — LinkSpark" }] }),
   component: ProfilePage,
 });
 
@@ -36,7 +36,7 @@ function ProfilePage() {
 
   return (
     <div className="min-h-screen bg-transparent text-foreground">
-      <AppNav email={user?.email ?? null} />
+      <AppNav username={profile?.username ?? user?.email ?? null} />
       <main className="max-w-2xl mx-auto px-6 py-10">
         <h1 className="text-2xl font-bold tracking-tight mb-1 text-foreground">Profile</h1>
         <p className="text-sm text-muted-foreground mb-6">Your account information.</p>

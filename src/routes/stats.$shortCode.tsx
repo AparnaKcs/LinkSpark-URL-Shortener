@@ -16,7 +16,7 @@ import { Link2 } from "lucide-react";
 export const Route = createFileRoute("/stats/$shortCode")({
   head: ({ params }) => ({
     meta: [
-      { title: `Stats /${params.shortCode} — Vektor` },
+      { title: `Stats /${params.shortCode} — LinkSpark` },
       { name: "description", content: `Public click analytics for /r/${params.shortCode}` },
     ],
   }),
@@ -39,7 +39,7 @@ function PublicStats() {
             <div className="size-6 bg-primary rounded-sm flex items-center justify-center">
               <div className="size-2 bg-card rotate-45" />
             </div>
-            <span className="font-bold tracking-tight text-foreground">VEKTOR</span>
+            <span className="font-bold tracking-tight text-foreground">LINKSPARK</span>
           </Link>
           <span className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">
             Public Stats
@@ -85,22 +85,23 @@ function PublicStats() {
                 <LineChart
                   data={data.daily.map((d) => ({ day: d.day.slice(5), clicks: d.clicks }))}
                 >
-                  <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                  <XAxis dataKey="day" tick={{ fontSize: 10 }} />
-                  <YAxis tick={{ fontSize: 10 }} allowDecimals={false} />
+                  <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" />
+                  <XAxis dataKey="day" tick={{ fontSize: 10, fill: "#000000" }} />
+                  <YAxis tick={{ fontSize: 10, fill: "#000000" }} allowDecimals={false} />
                   <Tooltip
                     contentStyle={{
                       background: "var(--surface)",
                       border: "1px solid var(--border)",
                       borderRadius: 8,
                       fontSize: 12,
+                      color: "#000000",
                     }}
                   />
                   <Line
                     type="monotone"
                     dataKey="clicks"
-                    stroke="oklch(0.72 0.17 162)"
-                    strokeWidth={2}
+                    stroke="var(--color-brand)"
+                    strokeWidth={2.5}
                     dot={false}
                   />
                 </LineChart>

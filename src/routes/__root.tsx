@@ -76,13 +76,13 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Vektor — URL Shortener with Analytics" },
+      { title: "LinkSpark — URL Shortener with Analytics" },
       {
         name: "description",
         content:
           "Shorten links, track every click. Custom aliases, QR codes, expiry, and real-time analytics.",
       },
-      { property: "og:title", content: "Vektor — URL Shortener with Analytics" },
+      { property: "og:title", content: "LinkSpark — URL Shortener with Analytics" },
       { property: "og:description", content: "Shorten links, track every click." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },

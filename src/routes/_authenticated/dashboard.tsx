@@ -15,6 +15,7 @@ import {
   QrCode,
   Plus,
   Upload,
+  Download,
   Search,
   Copy,
   ExternalLink,
@@ -23,7 +24,7 @@ import {
 } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
-  head: () => ({ meta: [{ title: "Dashboard — Vektor" }] }),
+  head: () => ({ meta: [{ title: "Dashboard — LinkSpark" }] }),
   component: Dashboard,
 });
 
@@ -50,9 +51,18 @@ function Dashboard() {
   const qc = useQueryClient();
   const router = useRouter();
 
-  const [email, setEmail] = useState<string | null>(null);
+  const [username, setUsername] = useState<string | null>(null);
   useMemo(() => {
-    supabase.auth.getUser().then(({ data }) => setEmail(data.user?.email ?? null));
+    supabase.auth.getUser().then(async ({ data }) => {
+      if (data.user) {
+        const { data: profile } = await supabase
+          .from("profiles")
+          .select("username")
+          .eq("id", data.user.id)
+          .maybeSingle();
+        setUsername(profile?.username || data.user.user_metadata?.username || data.user.email?.split("@")[0] || null);
+      }
+    });
   }, []);
 
   const { data: urls = [], isLoading } = useQuery({
@@ -283,7 +293,7 @@ function Dashboard() {
   const expiredCount = urls.length - activeLinks;
   return (
     <div className="min-h-screen bg-transparent text-foreground">
-      <AppNav email={email} />
+      <AppNav username={username} />
       <main className="max-w-7xl mx-auto px-6 py-10">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
@@ -681,65 +691,74 @@ function Dashboard() {
           onClick={() => setShowBulk(false)}
         >
           <div
-            className="bg-card rounded-xl border border-border p-6 max-w-lg w-full shadow-lg relative text-foreground"
+            className="bg-card rounded-2xl border-2 border-border p-6 max-w-lg w-full shadow-2xl relative text-foreground"
             onClick={(e) => e.stopPropagation()}
           >
             <button
               onClick={() => setShowBulk(false)}
-              className="absolute right-4 top-4 text-muted-foreground hover:text-foreground cursor-pointer p-1 rounded-md"
+              className="absolute right-4 top-4 text-muted-foreground hover:text-foreground cursor-pointer p-1.5 rounded-lg hover:bg-muted/20 transition"
             >
               <X className="size-4" />
             </button>
 
-            <h3 className="text-lg font-semibold text-foreground mb-1">Bulk shorten</h3>
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
-              <p className="text-xs text-muted-foreground">
-                One URL per line. Up to 200. We'll auto-download a CSV.
-              </p>
-              <div className="flex items-center gap-3">
-                <input
-                  type="file"
-                  accept=".csv,.txt"
-                  ref={fileInputRef}
-                  onChange={handleFileUpload}
-                  className="hidden"
-                />
-                <button
-                  type="button"
-                  onClick={() => fileInputRef.current?.click()}
-                  className="text-xs font-bold text-primary hover:underline flex items-center gap-1 cursor-pointer select-none"
-                >
-                  Upload CSV File
-                </button>
-                <span className="text-muted-foreground/30 text-xs select-none">|</span>
-                <button
-                  type="button"
-                  onClick={downloadTemplateCsv}
-                  className="text-xs font-bold text-primary hover:underline flex items-center gap-1 cursor-pointer select-none"
-                >
-                  Download Template
-                </button>
-              </div>
+            <h3 className="text-xl font-black text-foreground mb-1">Bulk Shorten Links</h3>
+            <p className="text-xs text-muted-foreground mb-6 leading-relaxed">
+              Shorten up to 200 URLs at once. Upload a CSV/text file containing your links, or download our template to format your list correctly.
+            </p>
+
+            {/* Separate Action Buttons Panel */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
+              <input
+                type="file"
+                accept=".csv,.txt"
+                ref={fileInputRef}
+                onChange={handleFileUpload}
+                className="hidden"
+              />
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                className="flex items-center justify-center gap-2 h-11 px-4 border-2 border-primary bg-secondary/35 rounded-lg text-xs font-bold hover:bg-secondary/60 transition cursor-pointer select-none text-foreground"
+              >
+                <Upload className="size-4 text-primary" />
+                Upload CSV File
+              </button>
+              <button
+                type="button"
+                onClick={downloadTemplateCsv}
+                className="flex items-center justify-center gap-2 h-11 px-4 border-2 border-primary bg-secondary/35 rounded-lg text-xs font-bold hover:bg-secondary/60 transition cursor-pointer select-none text-foreground"
+              >
+                <Download className="size-4 text-primary" />
+                Download Template
+              </button>
             </div>
 
-            <textarea
-              value={bulkText}
-              onChange={(e) => setBulkText(e.target.value)}
-              rows={8}
-              className="w-full p-3 bg-muted/20 border border-border rounded-md text-xs font-mono text-foreground focus:outline-none focus:ring-2 focus:ring-primary/40"
-              placeholder="https://example.com/a&#10;https://example.com/b"
-            />
-            <div className="flex justify-end gap-2 mt-4">
+            {/* Textarea Input Section */}
+            <div className="space-y-2">
+              <label className="block text-[10px] font-black uppercase tracking-wider text-muted-foreground">
+                Or paste URLs manually (one URL per line)
+              </label>
+              <textarea
+                value={bulkText}
+                onChange={(e) => setBulkText(e.target.value)}
+                rows={6}
+                className="w-full p-3.5 bg-muted/15 border-2 border-border rounded-lg text-xs font-mono text-foreground placeholder-foreground/35 focus:outline-none focus:ring-2 focus:ring-primary/45 transition"
+                placeholder="https://example.com/page1&#10;https://example.com/page2"
+              />
+            </div>
+
+            {/* Footer Buttons */}
+            <div className="flex justify-end gap-2.5 mt-6 pt-4 border-t border-border/40">
               <button
                 onClick={() => setShowBulk(false)}
-                className="px-4 py-2 text-sm border border-border rounded-md hover:bg-muted/10 text-foreground cursor-pointer"
+                className="px-4 py-2 h-10 text-xs border-2 border-border rounded-lg hover:bg-muted/10 text-foreground cursor-pointer font-bold transition"
               >
                 Cancel
               </button>
               <button
                 onClick={submitBulk}
                 disabled={bulkMut.isPending}
-                className="px-4 py-2 text-sm bg-brand text-brand-foreground rounded-md hover:brightness-110 disabled:opacity-50 cursor-pointer font-medium"
+                className="px-5 py-2 h-10 text-xs bg-brand text-brand-foreground border-2 border-brand rounded-lg hover:brightness-110 disabled:opacity-50 cursor-pointer font-black transition shadow-sm"
               >
                 {bulkMut.isPending ? "Working…" : "Shorten all"}
               </button>

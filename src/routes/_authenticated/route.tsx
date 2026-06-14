@@ -12,7 +12,12 @@ export const Route = createFileRoute("/_authenticated")({
   validateSearch: searchSchema,
   beforeLoad: async ({ search }) => {
     const { data, error } = await supabase.auth.getUser();
-    if (error || !data.user) throw redirect({ to: "/auth" });
+    if (error || !data.user) {
+      throw redirect({
+        to: "/auth",
+        search: { error: "user_not_found" },
+      });
+    }
 
     // Check if user is newly created and tried to sign in (not sign up) with Google
     if (search.flow === "signin") {
