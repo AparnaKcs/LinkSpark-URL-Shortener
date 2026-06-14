@@ -108,8 +108,8 @@ graph TD
 
     Browser -->|RPC calls| API
     Browser -->|Direct GET redirect| Redirect
-    API -->|Fetch /api/* (Forward Auth Header)| Express
-    Redirect -->|Fetch /r/* (Forward Client IP/UA)| Express
+    API -->|Fetch /api/* with Forwarded Auth Header| Express
+    Redirect -->|Fetch /r/* with Forwarded Client IP/UA| Express
     Express -->|Read/Write with RLS| Supabase
     Express -->|Validate User Session| Auth
     Express -->|Log Visits & Increment Clicks| Supabase
